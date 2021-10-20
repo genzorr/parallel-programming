@@ -1,13 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
-project(intro)
+project(sudoku)
 
 set(CMAKE_CXX_STANDARD 17)
 find_package(OpenMP)
 
 file(GLOB SOURCES
-        #hello.cpp
-#sum.cpp
-        access.cpp
+        *.*
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
