@@ -16,6 +16,5 @@ int main(int argc, char **argv)
     printf("\nRun with copyin clause.\n");
 #pragma omp parallel default(none) copyin(x)
     printf("Thread %d: n = %d\n", omp_get_thread_num(), x);
-
     return 0;
 }
