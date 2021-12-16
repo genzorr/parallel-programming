@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
-project(lab1)
+project(lab2)
 
 set(CMAKE_CXX_STANDARD 17)
 find_package(OpenMP)
 
 file(GLOB SOURCES
-        task-2.cpp
+        lab2.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

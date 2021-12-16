@@ -3,10 +3,10 @@
 #include <omp.h>
 #include <iostream>
 
-#define ISIZE 1000
-#define JSIZE 1000
+#define ISIZE 10000
+#define JSIZE 10000
 
-void writeArray(double a[ISIZE][JSIZE], char *name)
+void writeArray(double **a, char *name)
 {
     FILE *ff;
     ff = fopen(name, "w");
@@ -19,7 +19,7 @@ void writeArray(double a[ISIZE][JSIZE], char *name)
     fclose(ff);
 }
 
-void taskSequential(double a[ISIZE][JSIZE])
+void taskSequential(double **a)
 {
     for (int i = 0; i < ISIZE; i++)
     {
@@ -34,7 +34,7 @@ void taskSequential(double a[ISIZE][JSIZE])
     }
 }
 
-void taskParallel(double a[ISIZE][JSIZE], int nThreads)
+void taskParallel(double **a, int nThreads)
 {
 #pragma omp parallel for num_threads(nThreads)
     for (int i = 0; i < ISIZE; i++)
@@ -56,7 +56,10 @@ int main(int argc, char **argv)
     double start = 0., finish = 0.;
     std::cout.precision(4);
     std::cout << "Lab 1, task 2, anti-dependence" << std::scientific << "\n";
-    double a[ISIZE][JSIZE];
+
+    double **a = (double **)calloc(ISIZE, sizeof(*a));
+    for (int i = 0; i < JSIZE; i++)
+        a[i] = (double *)calloc(JSIZE, sizeof(double));
 
     // Timings
     FILE *ff;
@@ -68,7 +71,7 @@ int main(int argc, char **argv)
     finish = omp_get_wtime();
     std::cout << "Sequential, time: " << finish - start << "s.\n";
     fprintf(ff, "%d\t%.4e\n", 1, finish - start);
-    writeArray(a, "result-2-seq.txt");
+//    writeArray(a, "result-2-seq.txt");
 
     // Run parallel programs
     for (int nThreads = 2; nThreads <= 6; nThreads += 2)
@@ -79,10 +82,14 @@ int main(int argc, char **argv)
         std::cout << "Parallel, nThreads = " << nThreads << ", time: " << finish - start << "s.\n";
         fprintf(ff, "%d\t%.4e\n", nThreads, finish - start);
 
-        if (nThreads == 6)
-            writeArray(a, "result-2-par.txt");
+//        if (nThreads == 6)
+//            writeArray(a, "result-2-par.txt");
     }
     fclose(ff);
+
+    for (int i = 0; i < JSIZE; i++)
+        free(a[i]);
+    free(a);
 
     return 0;
 }
